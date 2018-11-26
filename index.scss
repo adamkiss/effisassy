@@ -1,0 +1,55 @@
+$mixins: (
+	ta-l: (text-align: left),
+	ta-c: (text-align: center),
+	ta-r: (text-align: right),
+	flex: (display: flex, flex-flow: row wrap)
+);
+
+// @mixin ta-l { text-align: left; } .ta-l { @include ta-l; }
+// @mixin ta-c { text-align: center; } .ta-c { @include ta-c; }
+// @mixin ta-r { text-align: right; } .ta-r { @include ta-r; }
+
+@function get-map-item($prop, $value) {
+	@return (#{$prop}: $value);
+}
+@function append-rule($key, $prop, $value) {
+	@return map-merge($mixins, (#{$key}: get-map-item($prop, $value)));
+}
+
+@mixin get-mixin($mixin) {
+	$definition: map-get($mixins, $mixin);
+	@each $key in map-keys($definition) {
+		#{$key}: map-get($definition, $key);
+	}
+
+}
+@mixin classes($classes) {
+	@each $class in $classes {
+		@include get-mixin($class);
+	}
+}
+@mixin generate-class($key) {
+	.#{$key} {
+		@include get-mixin($key);
+	}
+}
+@mixin effisassy-generate($settings) {
+	// use settings here…
+	@each $key in map-keys($mixins) {
+		@include generate-class($key);
+	}
+
+	// generate responsive
+	@each $rule, $classes in map-get($settings, responsive) {
+		@each $class in $classes {
+			.#{$class}\@#{$rule} { @include get-mixin($class) }
+		}
+	}
+}
+
+.class {
+	@include classes(ta-l);
+	@media (min-width: 720px) {
+		@include classes(ta-r);
+	}
+}

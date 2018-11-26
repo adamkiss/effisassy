@@ -1,0 +1,22 @@
+@import "../index.scss";
+
+@include effisassy-generate((
+	colors: (
+		
+	),
+	sizes: (
+		mt: (1: 1rem, 2: 2rem)
+	),
+	responsive: (
+		720: (ta-l ta-c ta-r)
+	)	
+))
+
+$generator: (
+);
+
+.button {
+	@include classes(ta-l flex)
+}
+
+$mixins: append-rule(mt-1, margin-top, 1rem);
